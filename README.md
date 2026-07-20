@@ -10,7 +10,7 @@
 ![CREATIVE-01](https://img.shields.io/badge/Track-CREATIVE--01-58C4FF?style=for-the-badge)
 
 <!-- VISITOR COUNT -->
-<img src="https://komarev.com/ghpvc/?username=yourusername&label=👀%20Judges%20Watching&color=58C4FF&style=flat-square" alt="visitor badge" />
+
 
 <br/>
 
