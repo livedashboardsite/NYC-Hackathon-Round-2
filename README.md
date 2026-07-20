@@ -439,13 +439,25 @@ Built with ❤️ during **NYC CodeQuest 2026**.
 <br>
 ---
 
+---
+
 # 📸 Preview
 
-<p align="center">
-  <img src="assets/home.png" width="48%" alt="Home Screen">
-  <img src="assets/gameplay.png" width="48%" alt="Gameplay">
-</p>
+<div align="center">
 
+### 🏠 Home Screen
+
+<img src="assets/home.png" width="900" alt="TidyQuest Home Screen">
+
+<br><br>
+
+### 🎮 Gameplay
+
+<img src="assets/gameplay.png" width="900" alt="TidyQuest Gameplay">
+
+</div>
+
+---
 ---
 
 **🧹 TidyQuest — Because boring software shouldn't exist.**
