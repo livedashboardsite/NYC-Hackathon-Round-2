@@ -2,107 +2,442 @@
 
 # 🧹 TidyQuest
 
-### Clear the Clutter. Chase the Combo. Beat Your High Score.
+### **Clear the Clutter. Chase the Combo. Beat Your High Score.**
 
-<img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&weight=700&size=28&pause=1000&color=7C5CFF&center=true&vCenter=true&width=700&lines=Turn+Notification+Cleanup+Into+A+Game.;Swipe.+Combo.+Compete.;Because+Boring+Software+Shouldn't+Exist.">
+<img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&weight=700&size=28&pause=1000&color=7C5CFF&center=true&vCenter=true&width=700&lines=Turn+Notification+Cleanup+Into+A+Game.;Swipe.+Combo.+Compete.;Because+Boring+Software+Shouldn't+Exist.;Built+for+NYC+CodeQuest+2026.">
 
 <br>
 
 ### 🚀 Live Demo
 
-**🌐 https://nyc-hackathon-round-2.vercel.app/**
+🌐 **https://nyc-hackathon-round-2.vercel.app/**
 
-**🧪 CodePen:** https://codepen.io/Prathamesh-Thakur/pen/emgjNpb
+🧪 **https://codepen.io/Prathamesh-Thakur/pen/emgjNpb**
 
 <br>
 
-![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
+<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+<img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white">
 
-![Status](https://img.shields.io/badge/Status-Completed-success?style=flat-square)
-![Hackathon](https://img.shields.io/badge/NYC-CodeQuest%202026-purple?style=flat-square)
-![Creative](https://img.shields.io/badge/Track-CREATIVE--01-ff69b4?style=flat-square)
+<br>
+
+<img src="https://img.shields.io/badge/Status-Completed-success?style=flat-square">
+<img src="https://img.shields.io/badge/Hackathon-NYC%20CodeQuest%202026-purple?style=flat-square">
+<img src="https://img.shields.io/badge/Track-CREATIVE--01-ff69b4?style=flat-square">
+<img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square">
 
 </div>
+
 ---
 
-<p align="center">
+# 🎯 NYC CodeQuest 2026 Submission
 
-## 🎯 NYC CodeQuest 2026 — Round 2 Submission
+## 🎨 Track
 
-**Track:** 🎨 Creative Engineering
+**Creative Engineering**
 
-**Problem Statement:** **CREATIVE-01 — Make Boring Impossible**
+### Problem Statement
+
+> **CREATIVE-01 — Make Boring Impossible**
 
 *"Most software gets the job done but leaves no lasting impression."*
 
-</p>
-
-<table align="center">
-<tr>
-<td align="center" width="33%">
-
-### 🧹 Problem
-
-Notification management is repetitive, boring, and offers zero satisfaction.
-
-</td>
-
-<td align="center" width="33%">
-
-### 💡 Solution
-
-Transform clearing notifications into an addictive mini-game with combos, rewards, animations, and competition.
-
-</td>
-
-<td align="center" width="33%">
-
-### 🎮 Result
-
-Users don't just clean their inbox—they enjoy doing it and want to share their scores.
-
-</td>
-</tr>
-</table>
-
 ---
-
-## ✨ Project Highlights
 
 <table>
 <tr>
-<td>🎮 Gamified Experience</td>
-<td>⚡ Combo & Streak System</td>
-</tr>
 
-<tr>
-<td>🧹 Swipe-Based Gameplay</td>
-<td>⭐ Gold Bonus Notifications</td>
-</tr>
+<td width="33%" align="center">
 
-<tr>
-<td>🚨 Priority Alert Protection</td>
-<td>✨ Particle & Motion Effects</td>
-</tr>
+## 🧹 Problem
 
-<tr>
-<td>🏆 Dynamic Leaderboard</td>
-<td>🔊 Interactive Sound Effects</td>
-</tr>
+Managing notifications is repetitive, boring and provides zero satisfaction.
 
-<tr>
-<td>📤 Share Your Score</td>
-<td>📱 Fully Responsive UI</td>
+</td>
+
+<td width="33%" align="center">
+
+## 💡 Solution
+
+Gamify notification cleanup with rewards, combos, animations and competition.
+
+</td>
+
+<td width="33%" align="center">
+
+## 🚀 Result
+
+Users don't just clean notifications—they actually enjoy doing it.
+
+</td>
+
 </tr>
 </table>
 
 ---
 
-> **TidyQuest transforms one of the most boring digital tasks—clearing notifications—into a fast, rewarding, and highly shareable gaming experience.**
->
-> Instead of simply pressing **"Clear All"**, players build combos, protect important alerts, earn higher scores, unlock satisfying animations, and compete against themselves for the perfect run.
+# ✨ Why TidyQuest?
+
+Every smartphone user receives hundreds of notifications every week.
+
+Normally users:
+
+❌ Ignore them
+
+❌ Clear them mindlessly
+
+❌ Feel overwhelmed
+
+TidyQuest transforms this boring habit into a rewarding arcade-style experience.
+
+Instead of pressing **"Clear All"**, players:
+
+- 🧹 Swipe notifications away
+- ⚡ Build combo multipliers
+- ⭐ Earn bonus points
+- 🚨 Protect important alerts
+- 🏆 Chase high scores
+- 📤 Share achievements
 
 ---
+
+# 🎮 Features
+
+## Gameplay
+
+- Swipe to dismiss notifications
+- Combo multiplier
+- Streak tracking
+- Score system
+- Victory screen
+- Randomized gameplay
+- Replayability
+
+---
+
+## Notification Types
+
+### 📩 Normal Notifications
+
+Regular messages worth points.
+
+### ⭐ Gold Notifications
+
+Bonus notifications worth **3× points**.
+
+### 🚨 Priority Notifications
+
+Cannot be swiped.
+
+Must be marked as **Read** to protect important information.
+
+---
+
+## Visual Experience
+
+- Glassmorphism UI
+- Modern gradients
+- Floating score animations
+- Particle effects
+- Smooth swipe interactions
+- Shake animation
+- Victory overlay
+- Responsive layout
+
+---
+
+## Audio
+
+- Swipe sound
+- Combo sound
+- Victory melody
+- Priority alert sound
+
+---
+
+## Sharing
+
+- Native Share API
+- Clipboard API fallback
+- Twitter/X sharing fallback
+
+---
+
+# 🎯 Game Mechanics
+
+| Notification | Action | Reward |
+|--------------|--------|--------|
+| Normal | Swipe | +10 Points |
+| Gold | Swipe | 3× Points |
+| Priority | Tap Read | Protect Alert |
+| Wrong Swipe | Shake Animation | No Reward |
+
+---
+
+# 🏗 Project Architecture
+
+```
+TidyQuest
+│
+├── index.html
+│
+├── styles.css
+│     ├── Animations
+│     ├── Glassmorphism
+│     ├── Particle Effects
+│     └── Responsive Design
+│
+├── script.js
+│     ├── Notification Generator
+│     ├── Swipe Engine
+│     ├── Combo System
+│     ├── Scoring Logic
+│     ├── Leaderboard
+│     ├── Share API
+│     ├── Audio Engine
+│     └── Victory Screen
+│
+└── README.md
+```
+
+---
+
+# ⚙ Tech Stack
+
+| Technology | Usage |
+|------------|------|
+| HTML5 | Structure |
+| CSS3 | Styling |
+| Vanilla JavaScript | Core Game Logic |
+| TailwindCSS CDN | UI Components |
+| Web Audio API | Sound |
+| Clipboard API | Share Feature |
+| Navigator Share API | Native Sharing |
+
+---
+
+# 🌟 Project Highlights
+
+| Feature | Included |
+|----------|----------|
+| 🎮 Gamification | ✅ |
+| 🧹 Swipe Controls | ✅ |
+| ⭐ Gold Notifications | ✅ |
+| 🚨 Priority Alerts | ✅ |
+| ✨ Particle Effects | ✅ |
+| 🔊 Audio Feedback | ✅ |
+| 📱 Responsive Design | ✅ |
+| 🏆 Leaderboard | ✅ |
+| 📤 Share Score | ✅ |
+| 🎯 Replayability | ✅ |
+
+---
+
+# 🚀 Live Demo
+
+## 🌐 Vercel
+
+https://nyc-hackathon-round-2.vercel.app/
+
+---
+
+## 🧪 CodePen
+
+https://codepen.io/Prathamesh-Thakur/pen/emgjNpb
+
+---
+
+# ⚙ Setup & Run Instructions
+
+## Requirements
+
+- Modern Browser
+- No Installation
+- No npm
+- No Build Tools
+
+---
+
+## Clone Repository
+
+```bash
+git clone https://github.com/yourusername/TidyQuest.git
+```
+
+---
+
+## Open Project
+
+```bash
+cd TidyQuest
+```
+
+---
+
+## Run
+
+Simply open
+
+```
+index.html
+```
+
+or
+
+Use **VS Code Live Server**.
+
+---
+
+# 📂 Folder Structure
+
+```
+📦 TidyQuest
+│
+├── 📄 index.html
+├── 📄 styles.css
+├── 📄 script.js
+└── 📄 README.md
+```
+
+---
+
+# 📸 Screenshots
+
+> Replace with your own screenshots before submission.
+
+```
+screenshots/
+
+home.png
+
+gameplay.png
+
+victory.png
+```
+
+---
+
+# 🎨 UI Highlights
+
+✅ Dark Theme
+
+✅ Glassmorphism
+
+✅ Animated Cards
+
+✅ Responsive Layout
+
+✅ Smooth Transitions
+
+✅ Swipe Animations
+
+✅ Particle Explosions
+
+✅ Floating Scores
+
+---
+
+# 🎮 Gameplay Flow
+
+```
+Generate Notifications
+        │
+        ▼
+ Swipe / Read Cards
+        │
+        ▼
+ Earn Points
+        │
+        ▼
+ Increase Combo
+        │
+        ▼
+ Build Streak
+        │
+        ▼
+ Inbox Zero
+        │
+        ▼
+ Share Your Score
+```
+
+---
+
+# 📦 Built With
+
+- HTML5
+- CSS3
+- JavaScript
+- TailwindCSS
+- Web Audio API
+- Clipboard API
+- Navigator Share API
+
+---
+
+# 🏆 Hackathon Submission
+
+### Event
+
+NYC CodeQuest 2026
+
+### Track
+
+🎨 Creative Engineering
+
+### Problem Statement
+
+CREATIVE-01 — Make Boring Impossible
+
+---
+
+# 💡 Future Improvements
+
+- Online Leaderboards
+- Achievements
+- Daily Challenges
+- Themes
+- Multiplayer Mode
+- Mobile App
+- User Profiles
+- Real Notification Integration
+
+---
+
+# 📈 Why This Solves The Challenge
+
+Traditional notification apps focus only on removing clutter.
+
+TidyQuest transforms the entire experience into entertainment.
+
+Instead of deleting notifications, users now:
+
+- Enjoy cleaning
+- Compete for higher scores
+- Protect important alerts
+- Experience rewarding animations
+- Share achievements
+
+This directly addresses the challenge of making everyday software memorable and enjoyable.
+
+---
+
+# 👨‍💻 Developer
+
+Built with ❤️ during **NYC CodeQuest 2026**.
+
+---
+
+<div align="center">
+
+## ⭐ Star this repository if you enjoyed the project!
+
+<img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&weight=700&size=22&pause=1000&color=7C5CFF&center=true&width=700&lines=Thanks+for+visiting!;Clear+the+Clutter.;Chase+the+Combo.;Beat+Your+High+Score.;See+you+at+the+next+hackathon!">
+
+<br>
+
+**🧹 TidyQuest — Because boring software shouldn't exist.**
+
+</div>
