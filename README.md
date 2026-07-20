@@ -1,7 +1,8 @@
 <div align="center">
 
+
 <!-- ANIMATED BANNER -->
-<img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&weight=700&size=36&duration=3000&pause=500&color=58C4FF&center=true&vCenter=true&width=500&lines=🧹+TidyQuest;Clear+the+Noise.;Make+Boring+Impossible." alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=36&duration=3000&pause=500&color=FF61D2&center=true&vCenter=true&width=600&lines=👾+TidyQuest;Gamify+Your+Chores.;Level+Up+Your+Inbox." alt="Typing SVG" />
 
 <!-- BADGES -->
 ![NYC CodeQuest 2026](https://img.shields.io/badge/NYC-CodeQuest%202026-58C4FF?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDJMMiA3bDEwIDUgMTAtNS0xMC01ek0yIDE3bDEwIDUgMTAtNU0yIDEybDEwIDUgMTAtNSIvPjwvc3ZnPg==)
