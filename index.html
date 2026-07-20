@@ -1,93 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TidyQuest — Clear the Clutter</title>
-<meta name="description" content="A gamified notification center. Swipe away the noise, chain combos, protect what matters.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
+/* --- 1. ENHANCED BACKGROUND & STAGE --- */
+body {
+    /* Added a slow pulse animation to the background gradient for a premium feel */
+    background: radial-gradient(1200px 600px at 50% -10%, hsl(var(--hue) 70% 22% / .55), transparent 60%),
+                linear-gradient(180deg, var(--bg-deep), var(--bg-mid));
+    animation: bgPulse 8s infinite alternate ease-in-out;
+}
 
-<span id="srStatus" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"></span>
+@keyframes bgPulse {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 0% 20px; }
+}
 
-<div class="stage">
+.stage {
+    /* Enhanced glassmorphism with a stronger inner border and shadow */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
 
-  <!-- ============ PHONE / TRAY ============ -->
-  <div class="phone">
-    <div class="statusbar">
-      <span id="clock">9:41</span>
-      <span>TIDYQUEST</span>
-      <span>🔋 87%</span>
-    </div>
+/* --- 2. BUTTON STYLES (Missing from original) --- */
+button {
+    font-family: 'Inter', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
 
-    <div class="tray-header">
-      <h1>Notifications</h1>
-      <span class="count-pill" id="countPill">0 waiting</span>
-    </div>
+.btn-primary {
+    background: var(--accent);
+    color: var(--bg-deep); /* High contrast */
+    font-weight: 700;
+    font-size: 18px;
+    padding: 16px 32px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 360px;
+    margin: 16px auto;
+    box-shadow: 0 8px 24px hsl(var(--hue) 85% 60% / 0.3);
+}
 
-    <div id="listArea" class="list"></div>
-  </div>
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px hsl(var(--hue) 85% 60% / 0.5);
+    filter: brightness(1.1);
+}
 
-  <!-- ============ SIDE PANEL ============ -->
-  <div class="side">
-    <div class="stat-row">
-      <div class="stat score">
-        <div class="label">Score</div>
-        <div class="value" id="scoreVal">0</div>
-      </div>
-      <div class="stat combo">
-        <div class="label">Combo</div>
-        <div class="value"><span id="comboFlash">×1</span></div>
-      </div>
-      <div class="stat streak">
-        <div class="label">Day streak</div>
-        <div class="value"><span>🔥</span><span id="streakVal">0</span></div>
-      </div>
-    </div>
+.btn-primary:active {
+    transform: translateY(1px);
+}
 
-    <div class="card-block">
-      <h3>How to play</h3>
-      <div class="how-steps">
-        <div class="how-step"><span class="n">1</span><span><b>Swipe right</b> (or tap ✕) on regular alerts to clear them for points.</span></div>
-        <div class="how-step"><span class="n">2</span><span>Clear fast, back-to-back, to build a <b>combo multiplier</b>.</span></div>
-        <div class="how-step"><span class="n">3</span><span><b>Gold</b> alerts are worth 3×. <b>Important</b> ones must be tapped <b>Read</b> — swipe those away and you lose your combo.</span></div>
-      </div>
-    </div>
+/* --- 3. FEATURE GRID FIXES --- */
+.feature-item {
+    transition: transform 0.2s ease, background 0.2s ease;
+}
 
-    <div class="card-block">
-      <h3>Today's leaderboard</h3>
-      <div id="leaderboard"></div>
-    </div>
-  </div>
+.feature-item:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.08);
+}
 
-</div>
+.feature-item .fi-icon {
+    font-size: 26px; /* Slightly larger */
+    display: block;
+    margin: 0 auto 8px; /* Fixed typo from 'ma;' */
+    filter: drop-shadow(0 2px 8px rgba(255,255,255,0.2));
+}
 
-<footer class="credit">TidyQuest · Clear the clutter, don't just bury it. Built for CREATIVE-01.</footer>
+/* --- 4. HUD POLISH (Game Screen) --- */
+.hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
 
-<!-- ============ VICTORY OVERLAY ============ -->
-<div class="overlay hidden" id="overlay">
-  <div class="score-card" id="scoreCard">
-    <div class="glyph">🏁</div>
-    <h2>Inbox Zero</h2>
-    <div class="sub" id="overlaySub">Cleared in 0.0s</div>
-    <div class="score-grid">
-      <div class="b"><div class="l">Score</div><div class="v" id="finalScore">0</div></div>
-      <div class="b"><div class="l">Best combo</div><div class="v" id="finalCombo">×1</div></div>
-      <div class="b"><div class="l">Priority saved</div><div class="v" id="finalPriority">0/0</div></div>
-      <div class="b"><div class="l">Rank</div><div class="v" id="finalRank">—</div></div>
-    </div>
-    <div class="overlay-actions">
-      <button class="btn-primary" id="shareBtn">Share my score</button>
-      <button class="btn-secondary" id="againBtn">Clear another batch</button>
-    </div>
-  </div>
-</div>
+.hud-block .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+    text-shadow: 0 0 12px hsl(var(--hue) 85% 60% / 0.4);
+}
 
-<div id="canvasHolder"><canvas id="shareCanvas" width="640" height="640"></canvas></div>
-
-<script src="script.js"></script>
-</body>
-</html>
+.streak-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    color: #ff9d00; /* Distinct color for streaks */
+}
