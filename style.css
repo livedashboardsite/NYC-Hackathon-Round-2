@@ -1,1 +1,39 @@
+:root {
+    --hue: 190;
+    --bg-deep: #090b14;
+    --bg-mid: #131a2e;
+    --card-bg: #f6f5f2;
+    --card-text: #14162b;
+    --muted: #8b93b8;
+    --accent: hsl(var(--hue), 85%, 60%);
+}
 
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background:
+        radial-gradient(1200px 600px at 50% -10%, hsl(var(--hue) 70% 22% / .55), transparent 60%),
+        linear-gradient(180deg, var(--bg-deep), var(--bg-mid));
+    color: #eef0fb;
+    overflow: hidden;
+    transition: background 400ms ease;
+    user-select: none;
+}
+
+}
