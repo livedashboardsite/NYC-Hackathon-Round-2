@@ -36,6 +36,76 @@ Swipe cards away, stack combos for bigger scores, and watch out for **Priority**
 - ⌨️ **Keyboard shortcuts** on the results screen: `R` to replay, `S` to share.
 - 📱 Fully responsive, dark-mode-first UI styled with Tailwind CSS.
 
+## 🎨 Design System
+
+TidyQuest uses a dark, glassmorphic aesthetic inspired by modern mobile notification centers — the goal was to make the game *feel* like a real phone lock screen you're gleefully tearing apart.
+
+**Color palette**
+
+| Token | Hex | Used for |
+|---|---|---|
+| `brand-accent` | `#FF7A45` | Streak highlights, warm accents |
+| `brand-purple` | `#7C5CFF` | Combo counter, primary CTA gradient |
+| `brand-good` | `#3DDC97` | Score, success states, priority "Read" action |
+| `brand-warn` | `#FFD166` | Gold notifications, best-combo stat |
+| `brand-danger` | `#FF5D7A` | Priority notifications, alerts |
+
+Base surface colors sit on a `slate-950` background with a soft radial indigo glow behind the header, and every panel uses translucent `white/5`–`white/10` fills with `backdrop-blur` to create layered glass cards.
+
+**Typography**
+
+| Font | Role |
+|---|---|
+| **Space Grotesk** | Display headings, scores, titles — bold and game-like |
+| **Inter** | Body copy, instructions, notification text — clean and legible |
+| **JetBrains Mono** | Stats labels, timestamps, pills — a "system HUD" feel |
+
+**Layout principles**
+
+- **Two-column responsive grid**: the phone-style notification stack sits on the left (`420px` fixed on desktop), stats/instructions/leaderboard flow on the right — collapsing to a single stacked column on mobile.
+- **Rounded, layered depth**: large `rounded-[36px]` outer panel with `rounded-2xl` inner cards, creating a nested "phone within a dashboard" feel.
+- **Micro-interactions everywhere**: every stat tile lifts (`hover:-translate-y-1`) and brightens on hover so the UI never feels static, even before you touch a card.
+
+## 🎬 Animations & Motion Design
+
+Every clear, combo, and shake is reinforced with motion so the game feels tactile rather than just clickable. All animations live in `styles.css` and are driven by simple class toggles from `script.js`.
+
+| Animation | Trigger | Effect |
+|---|---|---|
+| **Live drag** | Pointer down + move on a card | Card follows the cursor/finger in real time, rotating proportionally to horizontal distance (`rotate = dx × 0.08`) and fading out as it travels further from center |
+| **Leave right / left** | Swipe past the 100px threshold on a normal/gold card | Card flies off-screen (`translateX(±450px)`) with a matching rotation and scale-down, using a snappy `cubic-bezier(0.2, 0.8, 0.2, 1)` ease |
+| **Leave up** | Tapping **✓ Read** on a priority card | Card gently lifts and fades (`translateY(-50px)`), signaling a "safely handled" dismissal rather than a swipe |
+| **Shake** | Swiping a priority card (invalid action) | A quick horizontal shake (`@keyframes shake`) paired with a low-toned warning sound — instant, unmistakable negative feedback |
+| **Particle burst** | Any successful dismissal | 12 small colored circles spawn from the card's center and fly outward at randomized angles/distances, shrinking to nothing over 0.55s |
+| **Floating score pop-up** | Any successful dismissal | A `+N` label pops up from the card, overshoots slightly (`scale(1.15)`), then drifts upward and fades — classic "juicy" game feedback |
+| **Fade-in** | New cards rendering into the list | Cards ease in with `opacity`/`scale` rather than popping in abruptly |
+| **Bounce** | "Inbox Zero" 🏁 emoji on the results overlay | A celebratory Tailwind `animate-bounce` on completion |
+
+**Design intent:** every interaction has a matching visual *and* audio cue (see `playDismiss`, `playCombo`, `playPriority`, `playVictory` in `script.js`), so feedback is multi-sensory — this was a deliberate choice to make the "just one more batch" loop as satisfying as possible.
+
+## 🧩 Workflow & Architecture
+
+**How the app is wired together:**
+
+```
+┌─────────────────┐      ┌──────────────────┐      ┌───────────────────┐
+│   index.html     │ ──▶  │   script.js       │ ──▶  │   styles.css       │
+│  (structure +    │      │  (state, logic,   │      │  (motion, shake,   │
+│   Tailwind theme)│      │   audio, DOM)     │      │   particles)       │
+└─────────────────┘      └──────────────────┘      └───────────────────┘
+```
+
+**Game loop, step by step:**
+
+1. **Init** — `generateBatch(12)` creates a randomized set of notifications (20% priority, 15% gold, remainder normal) and renders them into `#listArea`.
+2. **Interact** — each card gets pointer listeners for drag-to-dismiss, plus fallback `✕` / `✓ Read` buttons for accessibility and non-touch use.
+3. **Resolve** — on a valid swipe, `dismissCard()` calculates points (base × type multiplier × combo multiplier), updates combo/streak state, fires particles + score pop-up + sound, then removes the notification from state and re-renders.
+4. **Guard rails** — swiping a *priority* card is intercepted before it can be dismissed: it shakes, plays a warning tone, and returns to its original position untouched.
+5. **Completion** — once the list empties, `showVictory()` locks the game, plays a five-note victory jingle, populates the results card (score, best combo, priority save ratio, a randomized rank), and updates the mock leaderboard.
+6. **Replay loop** — `newBatch()` resets all state and generates a fresh set of notifications, keeping the session going without a page reload.
+
+This kept the build intentionally framework-free: a single `IIFE` in `script.js` owns all state, DOM refs are cached once at load, and rendering is a straightforward "wipe and rebuild" of `#listArea` on every state change — simple enough to reason about and debug quickly under hackathon time pressure.
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
