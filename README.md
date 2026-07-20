@@ -459,6 +459,47 @@ Built with ❤️ during **NYC CodeQuest 2026**.
 
 ---
 ---
+---
+
+# 👨‍💻 Developer
+
+<div align="center">
+
+## **Prathamesh Thakur**
+
+🎓 Student Developer • Hackathon Enthusiast • Frontend Developer
+
+**Team:** Emotion Emitters
+
+**Discord:** `pratham.emotion`
+
+</div>
+
+---
+
+# 🤝 Team
+
+<div align="center">
+
+| Team Name | Members |
+|:----------:|:-------:|
+| **Emotion Emitters** | **Prathamesh Thakur** |
+
+</div>
+
+---
+
+# 📬 Connect
+
+<div align="center">
+
+💬 **Discord:** `pratham.emotion`
+
+⭐ If you enjoyed **TidyQuest**, consider starring this repository!
+
+</div>
+
+---
 
 **🧹 TidyQuest — Because boring software shouldn't exist.**
 
