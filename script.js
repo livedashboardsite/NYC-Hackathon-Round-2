@@ -484,4 +484,81 @@ lb.innerHTML = html;
 function shareScore() {
 var text = '🧹 I cleared all notifications with a ' + bestCombo + 'x combo and scored ' + score + ' points! Can you beat me? #TidyQuest #NYCCodeQuest2026';
 if (navigator.share) {
-navigator.share({ title: 'Tidy
+navigator.share({ title: 'TidyQuest Score', text: text }).catch(function() {});
+} else {
+navigator.clipboard.writeText(text).then(function() {
+srStatus.textContent = 'Score copied to clipboard!';
+setTimeout(function() { srStatus.textContent = ''; }, 2000);
+}).catch(function() {
+var tweetUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
+window.open(tweetUrl, '_blank');
+});
+}
+}
+
+function newBatch() {
+notifications = generateBatch(12);
+score = 0;
+combo = 1;
+bestCombo = 1;
+streak = 0;
+prioritySaved = 0;
+priorityTotal = 0;
+startTime = Date.now();
+gameActive = true;
+lastDismissTime = 0;
+overlay.classList.add('hidden');
+renderNotifications();
+updateUI();
+srStatus.textContent = 'New batch ready!';
+setTimeout(function() { srStatus.textContent = ''; }, 1500);
+}
+
+function updateClock() {
+var now = new Date();
+var h = String(now.getHours()).padStart(2, '0');
+var m = String(now.getMinutes()).padStart(2, '0');
+document.getElementById('clock').textContent = h + ':' + m;
+}
+
+window.TidyQuest = {
+newBatch: newBatch,
+shareScore: shareScore
+};
+
+function init() {
+notifications = generateBatch(12);
+priorityTotal = 0;
+for (var i = 0; i < notifications.length; i++) {
+if (notifications[i].type === 'priority') priorityTotal++;
+}
+renderNotifications();
+updateUI();
+updateClock();
+setInterval(updateClock, 30000);
+
+shareBtn.addEventListener('click', shareScore);
+againBtn.addEventListener('click', function() {
+newBatch();
+});
+
+document.addEventListener('keydown', function(e) {
+if (e.key === 'r' && !overlay.classList.contains('hidden')) {
+newBatch();
+}
+if (e.key === 's' && !overlay.classList.contains('hidden')) {
+shareScore();
+}
+});
+
+console.log('🧹 TidyQuest loaded!');
+console.log('📊 ' + notifications.length + ' notifications ready');
+}
+
+if (document.readyState === 'loading') {
+document.addEventListener('DOMContentLoaded', init);
+} else {
+init();
+}
+
+})();
