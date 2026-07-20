@@ -1,7 +1,9 @@
 (function() {
     "use strict";
 
-    // ========== DATA ==========
+    // ========================================
+    // APP DATA
+    // ========================================
     const APP_POOL = [
         { app: "Mail", icon: "✉️" },
         { app: "Chat", icon: "💬" },
@@ -41,6 +43,42 @@
         "🔒 Two-factor authentication code: 492-018"
     ];
 
+    // ========================================
+    // STATE
+    // ========================================
+    let notifications = [];
+    let score = 0;
+    let combo = 1;
+    let bestCombo = 1;
+    let streak = 0;
+    let prioritySaved = 0;
+    let priorityTotal = 0;
+    let isProcessing = false;
+    let startTime = Date.now();
+    let lastDismissTime = 0;
+    let gameActive = true;
+
+    // ========================================
+    // DOM REFS
+    // ========================================
+    const listArea = document.getElementById('listArea');
+    const countPill = document.getElementById('countPill');
+    const scoreVal = document.getElementById('scoreVal');
+    const comboFlash = document.getElementById('comboFlash');
+    const streakVal = document.getElementById('streakVal');
+    const overlay = document.getElementById('overlay');
+    const finalScore = document.getElementById('finalScore');
+    const finalCombo = document.getElementById('finalCombo');
+    const finalPriority = document.getElementById('finalPriority');
+    const finalRank = document.getElementById('finalRank');
+    const overlaySub = document.getElementById('overlaySub');
+    const shareBtn = document.getElementById('shareBtn');
+    const againBtn = document.getElementById('againBtn');
+    const srStatus = document.getElementById('srStatus');
+
+    // ========================================
+    // HELPERS
+    // ========================================
     function getRandomItem(arr) {
         return arr[Math.floor(Math.random() * arr.length)];
     }
@@ -48,11 +86,13 @@
     function generateNotification() {
         const appInfo = getRandomItem(APP_POOL);
         const rand = Math.random();
-        let type, message;
+        let type = "normal";
+        let message = "";
 
         if (rand < 0.20) {
             type = "priority";
             message = getRandomItem(PRIORITY_LINES);
+            priorityTotal++;
         } else if (rand < 0.35) {
             type = "gold";
             message = getRandomItem(GOLD_LINES);
@@ -71,362 +111,482 @@
         };
     }
 
-    // ========== GAME STATE ==========
-    let state = {
-        notifications: [],
-        score: 0,
-        combo: 1,
-        streak: 0,
-        bestCombo: 1,
-        prioritySaved: 0,
-        priorityTotal: 0,
-        startTime: Date.now(),
-        isActive: true
-    };
-
-    // ========== DOM REFS ==========
-    const listArea = document.getElementById('listArea');
-    const countPill = document.getElementById('countPill');
-    const scoreVal = document.getElementById('scoreVal');
-    const comboFlash = document.getElementById('comboFlash');
-    const streakVal = document.getElementById('streakVal');
-    const overlay = document.getElementById('overlay');
-    const finalScore = document.getElementById('finalScore');
-    const finalCombo = document.getElementById('finalCombo');
-    const finalPriority = document.getElementById('finalPriority');
-    const finalRank = document.getElementById('finalRank');
-    const overlaySub = document.getElementById('overlaySub');
-    const againBtn = document.getElementById('againBtn');
-    const shareBtn = document.getElementById('shareBtn');
-    const leaderboardEl = document.getElementById('leaderboard');
-    const srStatus = document.getElementById('srStatus');
-
-    // ========== CLOCK ==========
-    function updateClock() {
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        document.getElementById('clock').textContent = h + ':' + m;
+    function generateBatch(count = 12) {
+        const batch = [];
+        for (let i = 0; i < count; i++) {
+            batch.push(generateNotification());
+        }
+        return batch;
     }
-    updateClock();
-    setInterval(updateClock, 10000);
 
-    // ========== RENDER ==========
-    function render() {
-        // Update count
-        const waiting = state.notifications.length;
-        countPill.textContent = waiting + ' waiting';
+    function getScoreMultiplier(type) {
+        if (type === "gold") return 3;
+        if (type === "priority") return 0; // Must read, not swipe
+        return 1;
+    }
 
-        // Update stats
-        scoreVal.textContent = state.score;
-        comboFlash.textContent = '×' + state.combo;
-        streakVal.textContent = state.streak;
+    function getRandomRank() {
+        const ranks = ["🥇 Gold", "🥈 Silver", "🥉 Bronze", "🏅 Honorable"];
+        return ranks[Math.floor(Math.random() * ranks.length)];
+    }
 
-        // Render notifications
-        if (waiting === 0) {
-            listArea.innerHTML = `
-                <div class="panel-state">
-                    <div class="glyph">🎯</div>
-                    <h2>All clear!</h2>
-                    <p>You've swept the tray. New notifications will arrive soon.</p>
-                    <button class="btn-primary" id="spawnBtn">Spawn test batch</button>
-                </div>
-            `;
-            document.getElementById('spawnBtn')?.addEventListener('click', () => {
-                for (let i = 0; i < 6; i++) {
-                    state.notifications.push(generateNotification());
-                }
-                render();
-            });
+    // ========================================
+    // AUDIO (Simple Web Audio)
+    // ========================================
+    let actx = null;
+
+    function playTone(freq, duration = 0.08, vol = 0.12) {
+        try {
+            if (!actx) actx = new(window.AudioContext || window.webkitAudioContext)();
+            const osc = actx.createOscillator();
+            const gain = actx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.0001, actx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(vol, actx.currentTime + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(actx.destination);
+            osc.start();
+            osc.stop(actx.currentTime + duration);
+        } catch (_) {}
+    }
+
+    function playDismiss() {
+        playTone(520 + combo * 15, 0.07);
+    }
+
+    function playCombo() {
+        playTone(680, 0.06);
+        setTimeout(() => playTone(840, 0.06), 80);
+    }
+
+    function playPriority() {
+        playTone(400, 0.15, 0.18);
+        setTimeout(() => playTone(300, 0.12, 0.15), 100);
+    }
+
+    function playVictory() {
+        [0, 0.1, 0.2, 0.35, 0.5].forEach((t, i) => {
+            setTimeout(() => playTone(523 + i * 100, 0.12, 0.15), t * 1000);
+        });
+    }
+
+    // ========================================
+    // RENDER
+    // ========================================
+    function renderNotifications() {
+        listArea.innerHTML = '';
+        if (notifications.length === 0) {
+            showEmptyState();
             return;
         }
 
-        let html = '';
-        state.notifications.forEach((notif, index) => {
-            const typeClass = notif.type === 'gold' ? 'gold' : notif.type === 'priority' ? 'priority' : '';
-            const tag = notif.type !== 'normal' ? `<span class="tag ${typeClass}">${notif.type}</span>` : '';
+        notifications.forEach((notif, index) => {
+            const card = document.createElement('div');
+            card.className = `card ${notif.type}`;
+            card.dataset.index = index;
+            card.dataset.id = notif.id;
+            card.style.animationDelay = (index * 0.04) + 's';
 
-            html += `
-                <div class="card ${typeClass}" data-index="${index}" data-id="${notif.id}">
-                    <div class="icon">${notif.icon}</div>
-                    <div class="body-txt">
-                        <div class="row1">
-                            <span class="app">${notif.app}</span>
-                            ${tag}
-                            <span class="time">${notif.time}</span>
-                        </div>
-                        <div class="preview">${notif.text}</div>
+            const isPriority = notif.type === 'priority';
+
+            card.innerHTML = `
+                <div class="icon">${notif.icon}</div>
+                <div class="body-txt">
+                    <div class="row1">
+                        <span class="app">${notif.app}</span>
+                        ${notif.type === 'gold' ? '<span class="tag gold">⭐ Gold</span>' : ''}
+                        ${notif.type === 'priority' ? '<span class="tag priority">⚡ Priority</span>' : ''}
+                        <span class="time">${notif.time}</span>
                     </div>
-                    <div class="actions">
-                        <button class="btn-x" data-action="swipe" aria-label="Clear notification">✕</button>
-                        ${notif.type === 'priority' ? `<button class="btn-read" data-action="read">✓ Read</button>` : ''}
-                    </div>
+                    <div class="preview">${notif.text}</div>
+                </div>
+                <div class="actions">
+                    ${isPriority ? `
+                        <button class="btn-read" data-id="${notif.id}">✓ Read</button>
+                    ` : `
+                        <button class="btn-x" data-id="${notif.id}">✕</button>
+                    `}
                 </div>
             `;
-        });
 
-        listArea.innerHTML = html;
+            // Swipe/Drag support
+            let startX = 0,
+                startY = 0,
+                dx = 0,
+                dy = 0,
+                isDragging = false;
 
-        // Attach event listeners
-        document.querySelectorAll('.card').forEach(card => {
-            const index = parseInt(card.dataset.index);
-            const notif = state.notifications[index];
-            if (!notif) return;
-
-            // Swipe button
-            const swipeBtn = card.querySelector('[data-action="swipe"]');
-            if (swipeBtn) {
-                swipeBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    handleSwipe(index);
-                });
-            }
-
-            // Read button (priority only)
-            const readBtn = card.querySelector('[data-action="read"]');
-            if (readBtn) {
-                readBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    handleRead(index);
-                });
-            }
-
-            // Drag/swipe support
-            let startX = 0, currentX = 0, isDragging = false;
             card.addEventListener('pointerdown', (e) => {
-                if (e.target.closest('button')) return;
+                if (e.target.closest('.btn-x') || e.target.closest('.btn-read')) return;
                 startX = e.clientX;
+                startY = e.clientY;
                 isDragging = true;
                 card.style.transition = 'none';
-                card.classList.add('dragging');
+                card.style.cursor = 'grabbing';
             });
 
             document.addEventListener('pointermove', (e) => {
                 if (!isDragging) return;
-                const dx = e.clientX - startX;
-                currentX = dx;
-                card.style.setProperty('--dx', dx + 'px');
-                const rot = Math.min(Math.max(dx / 15, -20), 20);
-                card.style.setProperty('--rot', rot + 'deg');
+                dx = e.clientX - startX;
+                dy = e.clientY - startY;
+                const rot = dx * 0.08;
+                card.style.transform = `translateX(${dx}px) rotate(${rot}deg)`;
                 card.style.opacity = 1 - Math.abs(dx) / 400;
             });
 
             document.addEventListener('pointerup', (e) => {
                 if (!isDragging) return;
                 isDragging = false;
-                card.classList.remove('dragging');
-                card.style.transition = 'transform .3s, opacity .3s';
+                card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                card.style.cursor = 'grab';
 
-                if (currentX > 80) {
-                    // Swipe right - clear
-                    handleSwipe(index);
-                } else if (currentX < -80) {
-                    // Swipe left - ignore
-                    card.style.setProperty('--dx', '-100px');
-                    card.style.opacity = '0';
-                    setTimeout(() => {
-                        card.style.setProperty('--dx', '0px');
-                        card.style.setProperty('--rot', '0deg');
-                        card.style.opacity = '1';
-                    }, 300);
+                if (Math.abs(dx) > 120 && !isPriority) {
+                    // Swipe to dismiss
+                    const dir = dx > 0 ? 'right' : 'left';
+                    dismissCard(card, dir);
                 } else {
-                    card.style.setProperty('--dx', '0px');
-                    card.style.setProperty('--rot', '0deg');
+                    card.style.transform = '';
                     card.style.opacity = '1';
                 }
-                currentX = 0;
+                dx = 0;
+                dy = 0;
             });
+
+            // Button handlers
+            card.querySelector('.btn-x')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dismissCard(card, 'right');
+            });
+
+            card.querySelector('.btn-read')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handlePriorityRead(card);
+            });
+
+            listArea.appendChild(card);
         });
+
+        updateUI();
     }
 
-    // ========== ACTIONS ==========
-    function handleSwipe(index) {
-        const notif = state.notifications[index];
+    function showEmptyState() {
+        listArea.innerHTML = `
+            <div class="panel-state">
+                <div class="glyph">🧹</div>
+                <h2>All clear!</h2>
+                <p>You've cleared all notifications. Time for a fresh batch.</p>
+                <button class="btn-primary" onclick="TidyQuest.newBatch()">🔄 New batch</button>
+            </div>
+        `;
+    }
+
+    // ========================================
+    // CARD ACTIONS
+    // ========================================
+    function dismissCard(card, direction) {
+        if (!gameActive || isProcessing) return;
+        const id = card.dataset.id;
+        const notif = notifications.find(n => n.id === id);
         if (!notif) return;
 
-        // Priority notifications cannot be swiped
+        isProcessing = true;
+
+        // Don't allow swiping priority
         if (notif.type === 'priority') {
-            // Show shake feedback
-            const cards = document.querySelectorAll('.card');
-            if (cards[index]) {
-                cards[index].classList.add('shake');
-                setTimeout(() => cards[index]?.classList.remove('shake'), 300);
-            }
-            srStatus.textContent = 'Cannot swipe priority notification. Please tap Read.';
+            card.classList.add('shake');
+            playPriority();
+            setTimeout(() => {
+                card.classList.remove('shake');
+                isProcessing = false;
+            }, 300);
             return;
         }
 
-        // Calculate points with combo
-        let points = 1;
-        if (notif.type === 'gold') points = 3;
+        // Calculate points
+        const mult = getScoreMultiplier(notif.type);
+        const comboMult = Math.min(combo, 10);
+        let points = 10 * mult * comboMult;
 
-        // Apply combo multiplier
-        const totalPoints = points * state.combo;
-        state.score += totalPoints;
-        state.streak += 1;
-        state.combo += 1;
+        // Bonus for gold
+        if (notif.type === 'gold') points += 20;
 
-        // Track best combo
-        if (state.combo > state.bestCombo) {
-            state.bestCombo = state.combo;
+        // Update combo
+        const now = Date.now();
+        if (now - lastDismissTime < 2000) {
+            combo = Math.min(combo + 0.5, 10);
+            if (combo > 3) playCombo();
+        } else {
+            combo = Math.max(1, combo - 0.5);
         }
 
-        // Remove notification
-        state.notifications.splice(index, 1);
+        combo = Math.round(combo);
+        if (combo > bestCombo) bestCombo = combo;
 
-        // Show popup
-        showPopup('+' + totalPoints + ' pts', index);
+        // Add score
+        score += points;
+        lastDismissTime = now;
 
-        render();
+        // Streak
+        streak++;
 
-        // Check for victory
-        if (state.notifications.length === 0) {
-            setTimeout(showVictory, 500);
+        // Remove card with animation
+        const dirClass = direction === 'right' ? 'leaving-right' : 'leaving-left';
+        card.classList.add(dirClass);
+        playDismiss();
+
+        // Particles
+        spawnParticles(card);
+
+        // Floating score
+        showFloatingScore(card, points);
+
+        // Remove from array
+        notifications = notifications.filter(n => n.id !== id);
+
+        setTimeout(() => {
+            isProcessing = false;
+            renderNotifications();
+            updateUI();
+
+            if (notifications.length === 0) {
+                setTimeout(showVictory, 400);
+            }
+        }, 350);
+    }
+
+    function handlePriorityRead(card) {
+        if (!gameActive || isProcessing) return;
+        const id = card.dataset.id;
+        const notif = notifications.find(n => n.id === id);
+        if (!notif) return;
+
+        isProcessing = true;
+        prioritySaved++;
+        playPriority();
+
+        // Remove card
+        card.classList.add('leaving-up');
+        notifications = notifications.filter(n => n.id !== id);
+
+        setTimeout(() => {
+            isProcessing = false;
+            renderNotifications();
+            updateUI();
+
+            if (notifications.length === 0) {
+                setTimeout(showVictory, 400);
+            }
+        }, 350);
+    }
+
+    // ========================================
+    // PARTICLES & EFFECTS
+    // ========================================
+    function spawnParticles(card) {
+        const rect = card.getBoundingClientRect();
+        const container = card.closest('.list') || listArea;
+        const containerRect = container.getBoundingClientRect();
+
+        const cx = rect.left - containerRect.left + rect.width / 2;
+        const cy = rect.top - containerRect.top + rect.height / 2;
+
+        const colors = ['#FF7A45', '#7C5CFF', '#3DDC97', '#FFD166', '#FF5D7A'];
+
+        for (let i = 0; i < 12; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = 4 + Math.random() * 8;
+            const angle = Math.random() * 2 * Math.PI;
+            const dist = 40 + Math.random() * 80;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.background = colors[Math.floor(Math.random() * colors.length)];
+            p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+            p.style.left = cx + 'px';
+            p.style.top = cy + 'px';
+            p.style.setProperty('--px', Math.cos(angle) * dist + 'px');
+            p.style.setProperty('--py', Math.sin(angle) * dist + 'px');
+            p.style.setProperty('--pr', (Math.random() * 360) + 'deg');
+            container.appendChild(p);
+            setTimeout(() => p.remove(), 600);
         }
     }
 
-    function handleRead(index) {
-        const notif = state.notifications[index];
-        if (!notif || notif.type !== 'priority') return;
+    function showFloatingScore(card, points) {
+        const rect = card.getBoundingClientRect();
+        const container = card.closest('.list') || listArea;
+        const containerRect = container.getBoundingClientRect();
 
-        state.prioritySaved += 1;
-        state.priorityTotal += 1;
-        state.notifications.splice(index, 1);
+        const el = document.createElement('div');
+        el.className = 'pop-score';
+        el.textContent = `+${points}`;
+        el.style.left = (rect.left - containerRect.left + rect.width / 2 - 20) + 'px';
+        el.style.top = (rect.top - containerRect.top - 10) + 'px';
+        el.style.color = points > 30 ? '#FFD166' : '#3DDC97';
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 700);
+    }
 
-        // Reset combo on read (they handled it correctly)
-        state.combo = 1;
+    // ========================================
+    // UI UPDATE
+    // ========================================
+    function updateUI() {
+        scoreVal.textContent = score;
+        comboFlash.textContent = `×${combo}`;
+        streakVal.textContent = streak;
+        countPill.textContent = `${notifications.length} waiting`;
 
-        showPopup('✓ Priority saved!', index);
-        render();
-
-        if (state.notifications.length === 0) {
-            setTimeout(showVictory, 500);
+        if (combo > 3) {
+            comboFlash.style.color = '#FF7A45';
+            comboFlash.style.transform = 'scale(1.2)';
+        } else {
+            comboFlash.style.color = '';
+            comboFlash.style.transform = '';
         }
     }
 
-    function showPopup(text, index) {
-        const cards = document.querySelectorAll('.card');
-        if (!cards[index]) return;
-
-        const rect = cards[index].getBoundingClientRect();
-        const popup = document.createElement('div');
-        popup.className = 'pop-score';
-        popup.textContent = text;
-        popup.style.left = (rect.left + rect.width / 2 - 40) + 'px';
-        popup.style.top = (rect.top - 10) + 'px';
-        document.body.appendChild(popup);
-        setTimeout(() => popup.remove(), 800);
-
-        // Combo flash
-        comboFlash.style.transform = 'scale(1.6)';
-        setTimeout(() => comboFlash.style.transform = 'scale(1)', 150);
-    }
-
+    // ========================================
+    // VICTORY
+    // ========================================
     function showVictory() {
-        if (!state.isActive) return;
-        state.isActive = false;
+        gameActive = false;
+        const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+        const rank = getRandomRank();
 
-        const elapsed = ((Date.now() - state.startTime) / 1000).toFixed(1);
-        overlaySub.textContent = `Cleared in ${elapsed}s`;
-        finalScore.textContent = state.score;
-        finalCombo.textContent = '×' + state.bestCombo;
-        finalPriority.textContent = state.prioritySaved + '/' + state.priorityTotal;
-
-        // Rank based on score
-        let rank = '🌱 Novice';
-        if (state.score > 50) rank = '🌟 Pro';
-        if (state.score > 100) rank = '👑 Master';
-        if (state.score > 200) rank = '🏆 Legend';
+        finalScore.textContent = score;
+        finalCombo.textContent = `×${bestCombo}`;
+        finalPriority.textContent = `${prioritySaved}/${priorityTotal}`;
         finalRank.textContent = rank;
+        overlaySub.textContent = `Cleared in ${elapsed}s`;
 
+        playVictory();
         overlay.classList.remove('hidden');
 
-        // Update leaderboard
-        updateLeaderboard(state.score);
+        // Update leaderboard with your score
+        updateLeaderboard(score);
     }
 
-    // ========== LEADERBOARD ==========
-    let leaderboard = [];
+    function updateLeaderboard(myScore) {
+        const lb = document.getElementById('leaderboard');
+        const entries = [
+            { name: "You", score: myScore, me: true },
+            { name: "Alex", score: Math.floor(Math.random() * 100 + 50) },
+            { name: "Sam", score: Math.floor(Math.random() * 80 + 30) },
+            { name: "Jordan", score: Math.floor(Math.random() * 60 + 20) },
+            { name: "Taylor", score: Math.floor(Math.random() * 40 + 10) }
+        ];
 
-    function updateLeaderboard(score) {
-        const names = ['You', 'Alex', 'Jordan', 'Taylor', 'Morgan', 'Casey', 'Riley', 'Avery'];
-        const playerName = names[Math.floor(Math.random() * names.length)];
+        entries.sort((a, b) => b.score - a.score);
 
-        leaderboard.push({ name: playerName, score: score, isMe: true });
-        leaderboard.sort((a, b) => b.score - a.score);
-        if (leaderboard.length > 8) leaderboard.pop();
-
-        renderLeaderboard();
+        lb.innerHTML = entries.map((e, i) => `
+            <div class="leaderboard-row ${e.me ? 'me' : ''}">
+                <span class="rank">#${i + 1}</span>
+                <span class="name">${e.me ? '⭐ ' : ''}${e.name}</span>
+                <span class="pts">${e.score}</span>
+            </div>
+        `).join('');
     }
 
-    function renderLeaderboard() {
-        const fakeNames = ['Luna', 'Milo', 'Zara', 'Felix', 'Ivy', 'Nova', 'Atlas', 'Willow', 'Jade', 'Leo'];
-        let display = [...leaderboard];
-
-        // Add fake entries if needed
-        while (display.length < 6) {
-            const name = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-            const score = Math.floor(Math.random() * 150) + 20;
-            display.push({ name: name, score: score, isMe: false });
-        }
-
-        display.sort((a, b) => b.score - a.score);
-        display = display.slice(0, 8);
-
-        let html = '';
-        display.forEach((entry, i) => {
-            const cls = entry.isMe ? 'leaderboard-row me' : 'leaderboard-row';
-            html += `
-                <div class="${cls}">
-                    <span class="rank">#${i + 1}</span>
-                    <span class="name">${entry.isMe ? '⭐ ' : ''}${entry.name}</span>
-                    <span class="pts">${entry.score} pts</span>
-                </div>
-            `;
-        });
-        leaderboardEl.innerHTML = html;
-    }
-
-    // ========== RESET ==========
-    function resetGame() {
-        state.notifications = [];
-        state.score = 0;
-        state.combo = 1;
-        state.streak = 0;
-        state.bestCombo = 1;
-        state.prioritySaved = 0;
-        state.priorityTotal = 0;
-        state.startTime = Date.now();
-        state.isActive = true;
-        overlay.classList.add('hidden');
-        render();
-    }
-
-    // ========== SHARE ==========
+    // ========================================
+    // SHARE
+    // ========================================
     function shareScore() {
-        const text = `I scored ${state.score} points in TidyQuest! 🎯\nBest combo: ×${state.bestCombo}\nPriority notifications saved: ${state.prioritySaved}/${state.priorityTotal}`;
+        const text = `🧹 I cleared all notifications with a ${bestCombo}x combo and scored ${score} points! Can you beat me? #TidyQuest #NYCCodeQuest2026`;
         if (navigator.share) {
-            navigator.share({ title: 'TidyQuest Score', text: text });
+            navigator.share({ title: 'TidyQuest Score', text: text })
+                .catch(() => {});
         } else {
             navigator.clipboard.writeText(text).then(() => {
-                alert('Score copied to clipboard! Share it with friends.');
+                srStatus.textContent = 'Score copied to clipboard!';
+                setTimeout(() => srStatus.textContent = '', 2000);
+            }).catch(() => {
+                // Fallback
+                const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+                window.open(tweetUrl, '_blank');
             });
         }
     }
 
-    // ========== INIT ==========
-    function init() {
-        // Generate initial notifications
-        for (let i = 0; i < 7; i++) {
-            state.notifications.push(generateNotification());
-        }
-        render();
-        renderLeaderboard();
-
-        // Event listeners
-        againBtn.addEventListener('click', resetGame);
-        shareBtn.addEventListener('click', shareScore);
+    // ========================================
+    // NEW BATCH
+    // ========================================
+    function newBatch() {
+        notifications = generateBatch(12);
+        score = 0;
+        combo = 1;
+        bestCombo = 1;
+        streak = 0;
+        prioritySaved = 0;
+        priorityTotal = 0;
+        startTime = Date.now();
+        gameActive = true;
+        lastDismissTime = 0;
+        overlay.classList.add('hidden');
+        renderNotifications();
+        updateUI();
+        srStatus.textContent = 'New batch ready!';
+        setTimeout(() => srStatus.textContent = '', 1500);
     }
 
-    init();
+    // ========================================
+    // CLOCK
+    // ========================================
+    function updateClock() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('clock').textContent = `${h}:${m}`;
+    }
+
+    // ========================================
+    // EXPOSE TO GLOBAL
+    // ========================================
+    window.TidyQuest = {
+        newBatch: newBatch,
+        shareScore: shareScore
+    };
+
+    // ========================================
+    // INIT
+    // ========================================
+    function init() {
+        // Generate initial batch
+        notifications = generateBatch(12);
+        priorityTotal = notifications.filter(n => n.type === 'priority').length;
+
+        // Render
+        renderNotifications();
+        updateUI();
+        updateClock();
+        setInterval(updateClock, 30000);
+
+        // Event listeners
+        shareBtn.addEventListener('click', shareScore);
+        againBtn.addEventListener('click', () => {
+            newBatch();
+        });
+
+        // Keyboard shortcut: 'r' for restart, 's' for share
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'r' && !overlay.classList.contains('hidden')) {
+                newBatch();
+            }
+            if (e.key === 's' && !overlay.classList.contains('hidden')) {
+                shareScore();
+            }
+        });
+
+        console.log('🧹 TidyQuest loaded!');
+        console.log(`📊 ${notifications.length} notifications ready`);
+    }
+
+    // Start when DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
 })();
