@@ -437,6 +437,16 @@ Built with ❤️ during **NYC CodeQuest 2026**.
 <img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&weight=700&size=22&pause=1000&color=7C5CFF&center=true&width=700&lines=Thanks+for+visiting!;Clear+the+Clutter.;Chase+the+Combo.;Beat+Your+High+Score.;See+you+at+the+next+hackathon!">
 
 <br>
+---
+
+# 📸 Preview
+
+<p align="center">
+  <img src="assets/home.png" width="48%" alt="Home Screen">
+  <img src="assets/gameplay.png" width="48%" alt="Gameplay">
+</p>
+
+---
 
 **🧹 TidyQuest — Because boring software shouldn't exist.**
 
