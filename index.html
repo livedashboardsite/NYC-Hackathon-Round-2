@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TidyQuest — Clear the Noise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div class="stage" id="stage">
+
+        <!-- LANDING PAGE -->
+        <div class="screen active" id="landing">
+            <div class="badge">🚀 NYC CodeQuest 2026</div>
+            <div class="logo-icon">🧹</div>
+            <h1 class="landing-title">Clear the<br /><span>Noise.</span></h1>
+            <p class="landing-sub">
+                Turn boring notification cleanup into a satisfying, shareable experience.
+                Built in 8 hours for <strong>NYC CodeQuest 2026</strong>.
+            </p>
+            <div class="stats-banner">
+                <div class="stat"><div class="num">24</div><div class="label">Clutter Items</div></div>
+                <div class="stat"><div class="num">⚡</div><div class="label">Streak System</div></div>
+                <div class="stat"><div class="num">📸</div><div class="label">Shareable</div></div>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-item"><span class="fi-icon">🎯</span><span class="fi-label">Satisfying Dismiss</span></div>
+                <div class="feature-item"><span class="fi-icon">🔥</span><span class="fi-label">Combo Streaks</span></div>
+                <div class="feature-item"><span class="fi-icon">✨</span><span class="fi-label">Visual Effects</span></div>
+                <div class="feature-item"><span class="fi-icon">🐦</span><span class="fi-label">Tweet Your Score</span></div>
+            </div>
+            <button class="btn-primary" onclick="startGame()">🧹 Start Clearing</button>
+            <div class="footer-credit">Made with ❤️ for NYC CodeQuest 2026 • Round 2</div>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div class="screen" id="game">
+            <button class="back-btn" onclick="goHome()">←</button>
+            <div class="hud" style="margin-top:8px;">
+                <div class="hud-block"><div class="label">Score</div><div class="value" id="score">0</div></div>
+                <div class="hud-right">
+                    <div class="timer" id="timer">⏱️ 0:00</div>
+                    <div class="streak-block"><div class="label">Streak</div><div class="streak-value" id="streak">🔥 0×1</div></div>
+                    <div class="progress-ring-wrap">
+                        <svg class="progress-ring" viewBox="0 0 40 40">
+                            <circle class="progress-bg" cx="20" cy="20" r="18" />
+                            <circle class="progress-fill" id="progressFill" cx="20" cy="20" r="18" />
+                        </svg>
+                        <div class="progress-label" id="progressLabel">24</div>
+                    </div>
+                </div>
+            </div>
+            <div class="remaining" id="remaining">NOTIFICATIONS LEFT</div>
+            <div class="card-well" id="cardWell"></div>
+            <div class="swipe-hint">swipe, click, or press → to dismiss</div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div class="screen" id="end">
+            <button class="back-btn" onclick="goHome()">←</button>
+            <div class="recap-card" id="recapCard">
+                <div class="recap-eyebrow">🎯 Recap</div>
+                <div class="recap-title">You're <b id="pct">—%</b><br />Tidier Than Average</div>
+                <div class="recap-stats">
+                    <div class="recap-stat"><div class="n" id="finalScore">0</div><div class="l">Score</div></div>
+                    <div class="recap-stat"><div class="n" id="bestStreak">0</div><div class="l">Best Streak</div></div>
+                    <div class="recap-stat"><div class="n" id="finalTime">0.0s</div><div class="l">Avg Speed</div></div>
+                </div>
+                <div class="recap-foot" id="recapMessage">Inbox: empty. Brain: lighter.</div>
+            </div>
+            <div class="end-actions">
+                <button class="btn-twitter" onclick="tweetRecap()">🐦 Share</button>
+                <button class="btn" id="shotBtn" onclick="downloadRecap()">📸 Download</button>
+                <button class="btn ghost" onclick="restart()">🔄 Again</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- html2canvas for download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
