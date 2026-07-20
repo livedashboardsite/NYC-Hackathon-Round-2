@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,21 +32,21 @@
 
 <div class="side">
 <div class="stat-row">
-<div class="stat score">
+<div class="stat score glass-panel">
 <div class="label">Score</div>
 <div class="value" id="scoreVal">0</div>
 </div>
-<div class="stat combo">
+<div class="stat combo glass-panel">
 <div class="label">Combo</div>
 <div class="value"><span id="comboFlash">×1</span></div>
 </div>
-<div class="stat streak">
+<div class="stat streak glass-panel">
 <div class="label">Day streak</div>
 <div class="value"><span>🔥</span><span id="streakVal">0</span></div>
 </div>
 </div>
 
-<div class="card-block">
+<div class="card-block glass-panel">
 <h3>How to play</h3>
 <div class="how-steps">
 <div class="how-step"><span class="n">1</span><span><b>Swipe right</b> (or tap ✕) on regular alerts to clear them for points.</span></div>
@@ -55,7 +55,7 @@
 </div>
 </div>
 
-<div class="card-block">
+<div class="card-block glass-panel">
 <h3>Today's leaderboard</h3>
 <div id="leaderboard"></div>
 </div>
@@ -66,19 +66,19 @@
 <footer class="credit">TidyQuest · Clear the clutter, don't just bury it. Built for CREATIVE-01.</footer>
 
 <div class="overlay hidden" id="overlay">
-<div class="score-card" id="scoreCard">
+<div class="score-card glass-panel" id="scoreCard">
 <div class="glyph">🏁</div>
 <h2>Inbox Zero</h2>
 <div class="sub" id="overlaySub">Cleared in 0.0s</div>
 <div class="score-grid">
-<div class="b"><div class="l">Score</div><div class="v" id="finalScore">0</div></div>
-<div class="b"><div class="l">Best combo</div><div class="v" id="finalCombo">×1</div></div>
-<div class="b"><div class="l">Priority saved</div><div class="v" id="finalPriority">0/0</div></div>
-<div class="b"><div class="l">Rank</div><div class="v" id="finalRank">—</div></div>
+<div class="b glass-panel"><div class="l">Score</div><div class="v" id="finalScore">0</div></div>
+<div class="b glass-panel"><div class="l">Best combo</div><div class="v" id="finalCombo">×1</div></div>
+<div class="b glass-panel"><div class="l">Priority saved</div><div class="v" id="finalPriority">0/0</div></div>
+<div class="b glass-panel"><div class="l">Rank</div><div class="v" id="finalRank">—</div></div>
 </div>
 <div class="overlay-actions">
-<button class="btn-primary" id="shareBtn">Share my score</button>
-<button class="btn-secondary" id="againBtn">Clear another batch</button>
+<button class="btn-primary glass-btn" id="shareBtn">Share my score</button>
+<button class="btn-secondary glass-btn" id="againBtn">Clear another batch</button>
 </div>
 </div>
 </div>
