@@ -195,9 +195,9 @@ html += '<div class="preview">' + notif.text + '</div>';
 html += '</div>';
 html += '<div class="actions">';
 if (isPriority) {
-html += '<button class="btn-read" data-id="' + notif.id + '">✓ Read</button>';
+html += '<button class="btn-read glass-btn" data-id="' + notif.id + '">✓ Read</button>';
 } else {
-html += '<button class="btn-x" data-id="' + notif.id + '">✕</button>';
+html += '<button class="btn-x glass-btn" data-id="' + notif.id + '">✕</button>';
 }
 html += '</div>';
 
@@ -226,7 +226,7 @@ card.style.opacity = 1 - Math.abs(dx) / 400;
 document.addEventListener('pointerup', function(e) {
 if (!isDragging) return;
 isDragging = false;
-card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+card.style.transition = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease';
 card.style.cursor = 'grab';
 
 if (Math.abs(dx) > 120 && notif.type !== 'priority') {
@@ -266,7 +266,7 @@ function showEmptyState() {
 listArea.innerHTML = '';
 var div = document.createElement('div');
 div.className = 'panel-state';
-div.innerHTML = '<div class="glyph">🧹</div><h2>All clear!</h2><p>You\'ve cleared all notifications. Time for a fresh batch.</p><button class="btn-primary" onclick="TidyQuest.newBatch()">🔄 New batch</button>';
+div.innerHTML = '<div class="glyph">🧹</div><h2>All clear!</h2><p>You\'ve cleared all notifications. Time for a fresh batch.</p><button class="btn-primary glass-btn" onclick="TidyQuest.newBatch()">🔄 New batch</button>';
 listArea.appendChild(div);
 }
 
@@ -290,7 +290,7 @@ playPriority();
 setTimeout(function() {
 card.classList.remove('shake');
 isProcessing = false;
-}, 300);
+}, 400);
 return;
 }
 
@@ -388,23 +388,23 @@ var cy = rect.top - containerRect.top + rect.height / 2;
 
 var colors = ['#FF7A45', '#7C5CFF', '#3DDC97', '#FFD166', '#FF5D7A'];
 
-for (var i = 0; i < 12; i++) {
+for (var i = 0; i < 14; i++) {
 var p = document.createElement('div');
 p.className = 'particle';
-var size = 4 + Math.random() * 8;
+var size = 4 + Math.random() * 10;
 var angle = Math.random() * 2 * Math.PI;
-var dist = 40 + Math.random() * 80;
+var dist = 50 + Math.random() * 100;
 p.style.width = size + 'px';
 p.style.height = size + 'px';
 p.style.background = colors[Math.floor(Math.random() * colors.length)];
-p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+p.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+p.style.boxShadow = '0 0 10px ' + colors[Math.floor(Math.random() * colors.length)] + '40';
 p.style.left = cx + 'px';
 p.style.top = cy + 'px';
 p.style.setProperty('--px', Math.cos(angle) * dist + 'px');
 p.style.setProperty('--py', Math.sin(angle) * dist + 'px');
-p.style.setProperty('--pr', (Math.random() * 360) + 'deg');
 container.appendChild(p);
-setTimeout(function(el) { el.remove(); }, 600);
+setTimeout(function(el) { el.remove(); }, 700);
 }
 }
 
@@ -419,8 +419,9 @@ el.textContent = '+' + points;
 el.style.left = (rect.left - containerRect.left + rect.width / 2 - 20) + 'px';
 el.style.top = (rect.top - containerRect.top - 10) + 'px';
 el.style.color = points > 30 ? '#FFD166' : '#3DDC97';
+el.style.textShadow = '0 4px 20px rgba(0,0,0,0.3)';
 container.appendChild(el);
-setTimeout(function() { el.remove(); }, 700);
+setTimeout(function() { el.remove(); }, 800);
 }
 
 function updateUI() {
@@ -432,6 +433,8 @@ countPill.textContent = notifications.length + ' waiting';
 if (combo > 3) {
 comboFlash.style.color = '#FF7A45';
 comboFlash.style.transform = 'scale(1.2)';
+comboFlash.classList.add('pop');
+setTimeout(function() { comboFlash.classList.remove('pop'); }, 300);
 } else {
 comboFlash.style.color = '';
 comboFlash.style.transform = '';
