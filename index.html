@@ -15,75 +15,72 @@
 
 <div class="stage">
 
-  <!-- ============ PHONE / TRAY ============ -->
-  <div class="phone">
-    <div class="statusbar">
-      <span id="clock">9:41</span>
-      <span>TIDYQUEST</span>
-      <span>🔋 87%</span>
-    </div>
+<div class="phone">
+<div class="statusbar">
+<span id="clock">9:41</span>
+<span>TIDYQUEST</span>
+<span>🔋 87%</span>
+</div>
 
-    <div class="tray-header">
-      <h1>Notifications</h1>
-      <span class="count-pill" id="countPill">0 waiting</span>
-    </div>
+<div class="tray-header">
+<h1>Notifications</h1>
+<span class="count-pill" id="countPill">0 waiting</span>
+</div>
 
-    <div id="listArea" class="list"></div>
-  </div>
+<div id="listArea" class="list"></div>
+</div>
 
-  <!-- ============ SIDE PANEL ============ -->
-  <div class="side">
-    <div class="stat-row">
-      <div class="stat score">
-        <div class="label">Score</div>
-        <div class="value" id="scoreVal">0</div>
-      </div>
-      <div class="stat combo">
-        <div class="label">Combo</div>
-        <div class="value"><span id="comboFlash">×1</span></div>
-      </div>
-      <div class="stat streak">
-        <div class="label">Day streak</div>
-        <div class="value"><span>🔥</span><span id="streakVal">0</span></div>
-      </div>
-    </div>
+<div class="side">
+<div class="stat-row">
+<div class="stat score">
+<div class="label">Score</div>
+<div class="value" id="scoreVal">0</div>
+</div>
+<div class="stat combo">
+<div class="label">Combo</div>
+<div class="value"><span id="comboFlash">×1</span></div>
+</div>
+<div class="stat streak">
+<div class="label">Day streak</div>
+<div class="value"><span>🔥</span><span id="streakVal">0</span></div>
+</div>
+</div>
 
-    <div class="card-block">
-      <h3>How to play</h3>
-      <div class="how-steps">
-        <div class="how-step"><span class="n">1</span><span><b>Swipe right</b> (or tap ✕) on regular alerts to clear them for points.</span></div>
-        <div class="how-step"><span class="n">2</span><span>Clear fast, back-to-back, to build a <b>combo multiplier</b>.</span></div>
-        <div class="how-step"><span class="n">3</span><span><b>Gold</b> alerts are worth 3×. <b>Important</b> ones must be tapped <b>Read</b> — swipe those away and you lose your combo.</span></div>
-      </div>
-    </div>
+<div class="card-block">
+<h3>How to play</h3>
+<div class="how-steps">
+<div class="how-step"><span class="n">1</span><span><b>Swipe right</b> (or tap ✕) on regular alerts to clear them for points.</span></div>
+<div class="how-step"><span class="n">2</span><span>Clear fast, back-to-back, to build a <b>combo multiplier</b>.</span></div>
+<div class="how-step"><span class="n">3</span><span><b>Gold</b> alerts are worth 3×. <b>Important</b> ones must be tapped <b>Read</b> — swipe those away and you lose your combo.</span></div>
+</div>
+</div>
 
-    <div class="card-block">
-      <h3>Today's leaderboard</h3>
-      <div id="leaderboard"></div>
-    </div>
-  </div>
+<div class="card-block">
+<h3>Today's leaderboard</h3>
+<div id="leaderboard"></div>
+</div>
+</div>
 
 </div>
 
 <footer class="credit">TidyQuest · Clear the clutter, don't just bury it. Built for CREATIVE-01.</footer>
 
-<!-- ============ VICTORY OVERLAY ============ -->
 <div class="overlay hidden" id="overlay">
-  <div class="score-card" id="scoreCard">
-    <div class="glyph">🏁</div>
-    <h2>Inbox Zero</h2>
-    <div class="sub" id="overlaySub">Cleared in 0.0s</div>
-    <div class="score-grid">
-      <div class="b"><div class="l">Score</div><div class="v" id="finalScore">0</div></div>
-      <div class="b"><div class="l">Best combo</div><div class="v" id="finalCombo">×1</div></div>
-      <div class="b"><div class="l">Priority saved</div><div class="v" id="finalPriority">0/0</div></div>
-      <div class="b"><div class="l">Rank</div><div class="v" id="finalRank">—</div></div>
-    </div>
-    <div class="overlay-actions">
-      <button class="btn-primary" id="shareBtn">Share my score</button>
-      <button class="btn-secondary" id="againBtn">Clear another batch</button>
-    </div>
-  </div>
+<div class="score-card" id="scoreCard">
+<div class="glyph">🏁</div>
+<h2>Inbox Zero</h2>
+<div class="sub" id="overlaySub">Cleared in 0.0s</div>
+<div class="score-grid">
+<div class="b"><div class="l">Score</div><div class="v" id="finalScore">0</div></div>
+<div class="b"><div class="l">Best combo</div><div class="v" id="finalCombo">×1</div></div>
+<div class="b"><div class="l">Priority saved</div><div class="v" id="finalPriority">0/0</div></div>
+<div class="b"><div class="l">Rank</div><div class="v" id="finalRank">—</div></div>
+</div>
+<div class="overlay-actions">
+<button class="btn-primary" id="shareBtn">Share my score</button>
+<button class="btn-secondary" id="againBtn">Clear another batch</button>
+</div>
+</div>
 </div>
 
 <div id="canvasHolder"><canvas id="shareCanvas" width="640" height="640"></canvas></div>
