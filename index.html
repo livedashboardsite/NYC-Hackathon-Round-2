@@ -1,88 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TidyQuest — Clear the Noise</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TidyQuest — Clear the Clutter</title>
+<meta name="description" content="A gamified notification center. Swipe away the noise, chain combos, protect what matters.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <div class="stage" id="stage">
+<span id="srStatus" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);"></span>
 
-        <!-- LANDING PAGE -->
-        <div class="screen active" id="landing">
-            <div class="badge">🚀 NYC CodeQuest 2026</div>
-            <div class="logo-icon">🧹</div>
-            <h1 class="landing-title">Clear the<br /><span>Noise.</span></h1>
-            <p class="landing-sub">
-                Turn boring notification cleanup into a satisfying, shareable experience.
-                Built in 8 hours for <strong>NYC CodeQuest 2026</strong>.
-            </p>
-            <div class="stats-banner">
-                <div class="stat"><div class="num">24</div><div class="label">Clutter Items</div></div>
-                <div class="stat"><div class="num">⚡</div><div class="label">Streak System</div></div>
-                <div class="stat"><div class="num">📸</div><div class="label">Shareable</div></div>
-            </div>
-            <div class="feature-grid">
-                <div class="feature-item"><span class="fi-icon">🎯</span><span class="fi-label">Satisfying Dismiss</span></div>
-                <div class="feature-item"><span class="fi-icon">🔥</span><span class="fi-label">Combo Streaks</span></div>
-                <div class="feature-item"><span class="fi-icon">✨</span><span class="fi-label">Visual Effects</span></div>
-                <div class="feature-item"><span class="fi-icon">🐦</span><span class="fi-label">Tweet Your Score</span></div>
-            </div>
-            <button class="btn-primary" onclick="startGame()">🧹 Start Clearing</button>
-            <div class="footer-credit">Made with ❤️ for NYC CodeQuest 2026 • Round 2</div>
-        </div>
+<div class="stage">
 
-        <!-- GAME SCREEN -->
-        <div class="screen" id="game">
-            <button class="back-btn" onclick="goHome()">←</button>
-            <div class="hud" style="margin-top:8px;">
-                <div class="hud-block"><div class="label">Score</div><div class="value" id="score">0</div></div>
-                <div class="hud-right">
-                    <div class="timer" id="timer">⏱️ 0:00</div>
-                    <div class="streak-block"><div class="label">Streak</div><div class="streak-value" id="streak">🔥 0×1</div></div>
-                    <div class="progress-ring-wrap">
-                        <svg class="progress-ring" viewBox="0 0 40 40">
-                            <circle class="progress-bg" cx="20" cy="20" r="18" />
-                            <circle class="progress-fill" id="progressFill" cx="20" cy="20" r="18" />
-                        </svg>
-                        <div class="progress-label" id="progressLabel">24</div>
-                    </div>
-                </div>
-            </div>
-            <div class="remaining" id="remaining">NOTIFICATIONS LEFT</div>
-            <div class="card-well" id="cardWell"></div>
-            <div class="swipe-hint">swipe, click, or press → to dismiss</div>
-        </div>
-
-        <!-- END SCREEN -->
-        <div class="screen" id="end">
-            <button class="back-btn" onclick="goHome()">←</button>
-            <div class="recap-card" id="recapCard">
-                <div class="recap-eyebrow">🎯 Recap</div>
-                <div class="recap-title">You're <b id="pct">—%</b><br />Tidier Than Average</div>
-                <div class="recap-stats">
-                    <div class="recap-stat"><div class="n" id="finalScore">0</div><div class="l">Score</div></div>
-                    <div class="recap-stat"><div class="n" id="bestStreak">0</div><div class="l">Best Streak</div></div>
-                    <div class="recap-stat"><div class="n" id="finalTime">0.0s</div><div class="l">Avg Speed</div></div>
-                </div>
-                <div class="recap-foot" id="recapMessage">Inbox: empty. Brain: lighter.</div>
-            </div>
-            <div class="end-actions">
-                <button class="btn-twitter" onclick="tweetRecap()">🐦 Share</button>
-                <button class="btn" id="shotBtn" onclick="downloadRecap()">📸 Download</button>
-                <button class="btn ghost" onclick="restart()">🔄 Again</button>
-            </div>
-        </div>
-
+  <!-- ============ PHONE / TRAY ============ -->
+  <div class="phone">
+    <div class="statusbar">
+      <span id="clock">9:41</span>
+      <span>TIDYQUEST</span>
+      <span>🔋 87%</span>
     </div>
 
-    <!-- html2canvas for download -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
-    </script>
-    <script src="script.js"></script>
+    <div class="tray-header">
+      <h1>Notifications</h1>
+      <span class="count-pill" id="countPill">0 waiting</span>
+    </div>
+
+    <div id="listArea" class="list"></div>
+  </div>
+
+  <!-- ============ SIDE PANEL ============ -->
+  <div class="side">
+    <div class="stat-row">
+      <div class="stat score">
+        <div class="label">Score</div>
+        <div class="value" id="scoreVal">0</div>
+      </div>
+      <div class="stat combo">
+        <div class="label">Combo</div>
+        <div class="value"><span id="comboFlash">×1</span></div>
+      </div>
+      <div class="stat streak">
+        <div class="label">Day streak</div>
+        <div class="value"><span>🔥</span><span id="streakVal">0</span></div>
+      </div>
+    </div>
+
+    <div class="card-block">
+      <h3>How to play</h3>
+      <div class="how-steps">
+        <div class="how-step"><span class="n">1</span><span><b>Swipe right</b> (or tap ✕) on regular alerts to clear them for points.</span></div>
+        <div class="how-step"><span class="n">2</span><span>Clear fast, back-to-back, to build a <b>combo multiplier</b>.</span></div>
+        <div class="how-step"><span class="n">3</span><span><b>Gold</b> alerts are worth 3×. <b>Important</b> ones must be tapped <b>Read</b> — swipe those away and you lose your combo.</span></div>
+      </div>
+    </div>
+
+    <div class="card-block">
+      <h3>Today's leaderboard</h3>
+      <div id="leaderboard"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="credit">TidyQuest · Clear the clutter, don't just bury it. Built for CREATIVE-01.</footer>
+
+<!-- ============ VICTORY OVERLAY ============ -->
+<div class="overlay hidden" id="overlay">
+  <div class="score-card" id="scoreCard">
+    <div class="glyph">🏁</div>
+    <h2>Inbox Zero</h2>
+    <div class="sub" id="overlaySub">Cleared in 0.0s</div>
+    <div class="score-grid">
+      <div class="b"><div class="l">Score</div><div class="v" id="finalScore">0</div></div>
+      <div class="b"><div class="l">Best combo</div><div class="v" id="finalCombo">×1</div></div>
+      <div class="b"><div class="l">Priority saved</div><div class="v" id="finalPriority">0/0</div></div>
+      <div class="b"><div class="l">Rank</div><div class="v" id="finalRank">—</div></div>
+    </div>
+    <div class="overlay-actions">
+      <button class="btn-primary" id="shareBtn">Share my score</button>
+      <button class="btn-secondary" id="againBtn">Clear another batch</button>
+    </div>
+  </div>
+</div>
+
+<div id="canvasHolder"><canvas id="shareCanvas" width="640" height="640"></canvas></div>
+
+<script src="script.js"></script>
 </body>
 </html>
